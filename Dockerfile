@@ -1,15 +1,14 @@
 FROM ubuntu:18.04
 RUN apt-get update
-RUN apt-get install wget -y
-RUN apt-get install git -y 
+RUN apt-get install git -y
 RUN apt-get install curl -y
-RUN apt install apt-utils -y 
-RUN echo "deb http://ubuntu.kurento.org trusty kms6" | tee /etc/apt/sources.list.d/kurento.list
-RUN apt-get install --no-install-recommends --yes gnupg
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 5AFA7A83
-RUN apt-get update
-RUN apt-get install -y kurento-server
+RUN apt install apt-utils -y
+RUN apt install maven -y
+RUN apt install openjdk-8-jdk openjdk-8-jre -y
+RUN apt-get install software-properties-common -y
+RUN git clone https://github.com/talam1992/KMS-Group-Call-25fps-1280px.git
+WORKDIR KMS-Group-Call-25fps-1280px/
 
-EXPOSE 8888
+EXPOSE 8080
 
-ENTRYPOINT service kurento-media-server start
+ENTRYPOINT mvn -U clean spring-boot:run -Dkms.url=ws://172.17.0.1:8888/kurento
